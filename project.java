@@ -19,9 +19,9 @@ public class Project {
     		Scanner scan = new Scanner(System.in);
     		str = scan.nextLine();
     		str = properFormatting(str, ans);
-    		
+    		System.out.println(str);
     		if (str.matches("help")){
-    			System.out.println("Please type a math problem. Be sure to use '*' not 'x'. 'prev' is the previous answer.");
+    			System.out.println("Please type a math problem. Be sure to use '*' not 'x'. 'ans' is the previous answer.");
     			continue;
     		}
     		if (str.matches("exit")){
@@ -35,17 +35,17 @@ public class Project {
     	}
     }
     
-  public String properFormatting(String s, Double a){
+    //STRING FORMATTTING
+    
+    public String properFormatting(String s, Double a){
     	s = s.replaceAll(" ", "").toLowerCase();
-		  if (s.endsWith(".")){
-			  s = s.substring(0, s.length()-1);
-		  }
-		  s = s.replaceAll("prev", a.toString());
-      s = s.replaceAll("\\)\\)", "\\)+0\\)");
-		  s = s.replaceAll("\\(\\(", "\\(0+\\(");
-		  s = s.replaceAll("!\\)", "!+0\\)");
-		  List<String> tempStr = new ArrayList<>();
-		  Matcher m = Pattern.compile("[^\\d\\w)](?=[+ \\- * \\/ % ^])-\\d+\\.?\\d*").matcher(s);
+		if (s.endsWith(".")){
+			s = s.substring(0, s.length()-1);
+		}
+		s = s.replaceAll("ans", a.toString());
+		s = s.replaceAll("!\\)", "!+0\\)");
+		List<String> tempStr = new ArrayList<>();
+		Matcher m = Pattern.compile("[^\\d\\w)](?=[+ \\- * \\/ % ^])-\\d+\\.?\\d*").matcher(s);
    	 		while (m.find()) {
    	 			tempStr.add(m.group());
    	 		}
@@ -58,9 +58,22 @@ public class Project {
    	 		replacer = "(" + "0" + replacer.substring(0,replacer.length()) + ")";
    	 		s = s.replace(tempStr.get(y).substring(1,tempStr.get(y).length()), replacer);
    	 	}
-		
+   	 	boolean replaced = false;
+   	 	while (replaced == false){
+			if (s.contains("))")){
+				s = s.replaceAll("\\)\\)", "\\)+0\\)");
+				continue;
+			}
+			if (s.contains("((")){
+				s = s.replaceAll("\\(\\(", "\\(0+\\(");
+				continue;
+			}
+			replaced = true;
+		}
     	return s;
-  }
+    }
+    
+    //FIND NUMERS AND OPERANDS
     
     public List<String> findNumbers(String str){
     	//Find the numbers that you need
@@ -85,6 +98,8 @@ public class Project {
 		}
 		return returned;
     }
+    
+    //DEAL WITH PARENTHESIS
     
     public Double parenthesisFinder(List<String> nums, List<String> opps){
     	int start = -1;
@@ -115,9 +130,17 @@ public class Project {
     	} else {
     		
     		//parenthesis were found
+    		try{
+    			List<String> tempNumList = new ArrayList<>(nums.subList(start, stop+1));
+    			List<String> tempOppList = new ArrayList<>(opps.subList(start, stop));
+    			tempNumList = null;
+    			tempOppList = null;
+    		} catch(IllegalArgumentException e){
+    			System.out.println("Parentheis get lonely without a match. Make sure all of yours have one.");
+    			return 0.0;
+    		}finally{}
     		List<String> tempNumList = new ArrayList<>(nums.subList(start, stop+1));
-    		List<String> tempOppList = new ArrayList<>(opps.subList(start, stop));
-    	
+			List<String> tempOppList = new ArrayList<>(opps.subList(start, stop));
     		for (int x = start; x < stop; x++){
     			nums.remove(start);
     			opps.remove(start);
@@ -130,6 +153,8 @@ public class Project {
     		return parenthesisFinder(nums, opps);
     	}
     }
+    
+    //DO MATH ON THE INDEXES OF THE LISTS THAT ARE PASSED
     
     public Double math(List<Double> numbers, List<String> opperands){
     	Double temp = 0.0;
@@ -205,6 +230,9 @@ public class Project {
     	}
     	return numbers.get(0);
     }
+    
+    //COMPUTE FACTORIALS
+    
     public static double fact(double n){
 		if (n <= 1) 
 			return 1;
