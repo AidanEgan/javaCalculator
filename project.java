@@ -19,7 +19,6 @@ public class Project {
     		Scanner scan = new Scanner(System.in);
     		str = scan.nextLine();
     		str = properFormatting(str, ans);
-    		System.out.println(str);
     		if (str.matches("help")){
     			System.out.println("Please type a math problem. Be sure to use '*' not 'x'. 'ans' is the previous answer.");
     			continue;
