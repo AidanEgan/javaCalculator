@@ -85,13 +85,13 @@ public class Project {
     }
     
     public List<String> findOpperands(String str){
-    	String[] opperands = {"!","-","+","*","/","%","^"};
+    	String[] operands = {"!","-","+","*","/","%","^"};
     	String [] strArray = str.split("\\(?\\d+\\.?\\d*\\)?");
     	List<String> returned = new ArrayList<String>();
 		for (int x = 0; x < strArray.length; x++){
-			for (int y = 0; y < opperands.length; y++){
-				if (strArray[x].contains(opperands[y])){
-					returned.add(opperands[y]);
+			for (int y = 0; y < operands.length; y++){
+				if (strArray[x].contains(operands[y])){
+					returned.add(operands[y]);
 				}
 			}
 		}
@@ -157,37 +157,51 @@ public class Project {
     
     public Double math(List<Double> numbers, List<String> opperands){
     	Double temp = 0.0;
-    	for (int x = 0; x < opperands.size(); x++){
-    		if (opperands.get(x) == "!"){
-    			temp = fact(numbers.get(x));
-    			numbers.remove(x);
-    			numbers.remove(x);
-    			numbers.add(x, temp);
-    			opperands.remove(x);
-    		}
-    	}
+    	String[][] orderOfOpps = {{"!"},{"^"},{"%"},{"*","/"},{"+","-"}};
     	if (numbers.size() <= opperands.size()){
     		System.out.println("This isn't right");
     		return 0.0;
     	}
-    	
+    	int inOrder = 0;
+    	int k = 0;
     	while (opperands.size() > 0){
-    		temp = null;
-    		switch (opperands.get(0)){
-    			case "!": temp = fact(numbers.get(0));
-    			case "^": temp = Math.pow(numbers.get(0),numbers.get(1)); break;
-    			case "%": temp = Math.pow(numbers.get(0),numbers.get(1)); break;
-    			case "/": temp = numbers.get(0)/numbers.get(1); break;
-    			case "*": temp = numbers.get(0)*numbers.get(1); break;
-    			case "+": temp = numbers.get(0)+numbers.get(1); break;
-    			case "-": temp = numbers.get(0)-numbers.get(1); break;
+    		if (orderOfOpps[inOrder].length == 1){
+    			if (opperands.get(k) == orderOfOpps[inOrder][0]){
+    				temp = doMath(numbers.get(k),numbers.get(k+1),opperands.get(k));
+    				numbers.remove(k);
+    				numbers.remove(k);
+    				numbers.add(k,temp);
+    				opperands.remove(k);
+    			} else{k++;}
+    		} else {
+    			if (opperands.get(k) == orderOfOpps[inOrder][0] || opperands.get(k) == orderOfOpps[inOrder][1] ){
+    				temp = doMath(numbers.get(k),numbers.get(k+1),opperands.get(k));
+    				numbers.remove(k);
+    				numbers.remove(k);
+    				numbers.add(k,temp);
+    				opperands.remove(k);
+    			} else{k++;}
     		}
-    		numbers.remove(0);
-			numbers.remove(0);
-			numbers.add(0, temp);
-			opperands.remove(0);
-    	}
+    		if (k == opperands.size()){
+    			k = 0;
+    			inOrder++;
+    		}
+    	} 
     	return numbers.get(0);
+    }
+    
+    public Double doMath(Double arg1, Double arg2, String compare){
+    	Double answer = 0.0;
+    	switch (compare){
+		case "!": answer = fact(arg1); break;
+		case "^": answer = Math.pow(arg1,arg2); break;
+		case "%": answer = arg1%arg2; break;
+		case "/": answer = arg1/arg2; break;
+		case "*": answer = arg1*arg2; break;
+		case "+": answer = arg1+arg2; break;
+		case "-": answer = arg1-arg2; break;
+    	}
+    	return answer;
     }
     
     //COMPUTE FACTORIALS
