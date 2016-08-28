@@ -42,7 +42,6 @@ public class Project {
 			s = s.substring(0, s.length()-1);
 		}
 		s = s.replaceAll("ans", a.toString());
-		//s = s.replaceAll("!\\)", "!+0\\)");
 		s = s.replaceAll("!", "!1");
 		List<String> tempStr = new ArrayList<>();
 		Matcher m = Pattern.compile("[^\\d\\w)](?=[+ \\- * \\/ % ^])-\\d+\\.?\\d*").matcher(s);
@@ -171,64 +170,23 @@ public class Project {
     		System.out.println("This isn't right");
     		return 0.0;
     	}
+    	
     	while (opperands.size() > 0){
-    		for (int a = 0; a < opperands.size(); a++){
-    			temp = null;
-    			if (opperands.get(a) == "^"){
-    				temp = Math.pow(numbers.get(a),numbers.get(a+1));
-    			}
-    			if (temp != null){
-    				numbers.remove(a);
-    				numbers.remove(a);
-    				numbers.add(a, temp);
-    				opperands.remove(a);
-    			}
+    		temp = null;
+    		switch (opperands.get(0)){
+    			case "!": temp = fact(numbers.get(0));
+    			case "^": temp = Math.pow(numbers.get(0),numbers.get(1)); break;
+    			case "%": temp = Math.pow(numbers.get(0),numbers.get(1)); break;
+    			case "/": temp = numbers.get(0)/numbers.get(1); break;
+    			case "*": temp = numbers.get(0)*numbers.get(1); break;
+    			case "+": temp = numbers.get(0)+numbers.get(1); break;
+    			case "-": temp = numbers.get(0)-numbers.get(1); break;
     		}
-    		for (int b = 0; b < opperands.size(); b++){
-    			temp = null;
-    			if (opperands.get(b) == "%"){
-    				temp = numbers.get(b)%numbers.get(b+1);
-    			} 
-    			if (temp != null){
-    				numbers.remove(b);
-    				numbers.remove(b);
-    				numbers.add(b, temp);
-    				opperands.remove(b);
-    			}
-    		}
-    		for (int c = 0; c < opperands.size(); c++){
-    			temp = null;
-    			if (opperands.get(c) == "/" || opperands.get(c) == "*"){
-    				if (opperands.get(c) == "/"){
-    					temp = numbers.get(c)/numbers.get(c+1);
-    				} else {
-    					temp = numbers.get(c)*numbers.get(c+1);
-    				}
-    			} 
-    			if (temp != null){
-    				numbers.remove(c);
-    				numbers.remove(c);
-    				numbers.add(c, temp);
-    				opperands.remove(c);
-    			}
-    		}
-    		for (int d = 0; d < opperands.size(); d++){
-    			temp = null;
-    			if(opperands.get(d) == "+" || opperands.get(d) == "-"){
-    				if (opperands.get(d) == "+"){
-    					temp = numbers.get(d)+numbers.get(d+1);
-    				} else {
-    					temp = numbers.get(d)-numbers.get(d+1);
-    				}
-    			}
-    			if (temp != null){
-    				numbers.remove(d);
-    				numbers.remove(d);
-    				numbers.add(d, temp);
-    				opperands.remove(d);
-    			}
-    		}
-    	} 
+    		numbers.remove(0);
+			numbers.remove(0);
+			numbers.add(0, temp);
+			opperands.remove(0);
+    	}
     	return numbers.get(0);
     }
     
