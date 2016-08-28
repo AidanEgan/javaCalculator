@@ -42,7 +42,8 @@ public class Project {
 			s = s.substring(0, s.length()-1);
 		}
 		s = s.replaceAll("ans", a.toString());
-		s = s.replaceAll("!\\)", "!+0\\)");
+		//s = s.replaceAll("!\\)", "!+0\\)");
+		s = s.replaceAll("!", "!1");
 		List<String> tempStr = new ArrayList<>();
 		Matcher m = Pattern.compile("[^\\d\\w)](?=[+ \\- * \\/ % ^])-\\d+\\.?\\d*").matcher(s);
    	 		while (m.find()) {
@@ -127,19 +128,18 @@ public class Project {
     		}
     		return math(numsAsDubs,opps);
     	} else {
-    		
-    		//parenthesis were found
+    	
     		try{
     			List<String> tempNumList = new ArrayList<>(nums.subList(start, stop+1));
     			List<String> tempOppList = new ArrayList<>(opps.subList(start, stop));
-    			tempNumList = null;
-    			tempOppList = null;
     		} catch(IllegalArgumentException e){
     			System.out.println("Parentheis get lonely without a match. Make sure all of yours have one.");
     			return 0.0;
     		}finally{}
+    		
     		List<String> tempNumList = new ArrayList<>(nums.subList(start, stop+1));
 			List<String> tempOppList = new ArrayList<>(opps.subList(start, stop));
+			
     		for (int x = start; x < stop; x++){
     			nums.remove(start);
     			opps.remove(start);
@@ -148,6 +148,7 @@ public class Project {
     		
     		Double replacement = parenthesisFinder(tempNumList,tempOppList);
     		//System.out.println("replacement" + replacement);
+    		
     		nums.add(start,replacement.toString());
     		return parenthesisFinder(nums, opps);
     	}
@@ -161,11 +162,12 @@ public class Project {
     		if (opperands.get(x) == "!"){
     			temp = fact(numbers.get(x));
     			numbers.remove(x);
+    			numbers.remove(x);
     			numbers.add(x, temp);
     			opperands.remove(x);
     		}
     	}
-    	if (numbers.size() == opperands.size()){
+    	if (numbers.size() <= opperands.size()){
     		System.out.println("This isn't right");
     		return 0.0;
     	}
@@ -226,7 +228,7 @@ public class Project {
     				opperands.remove(d);
     			}
     		}
-    	}
+    	} 
     	return numbers.get(0);
     }
     
