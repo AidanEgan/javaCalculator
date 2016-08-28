@@ -28,8 +28,8 @@ public class Project {
     			scan.close();
     			break;
     		}
-    		System.out.println(findNumbers(str) + " : " + findOpperands(str));
-    		ans = parenthesisFinder(findNumbers(str), findOpperands(str));
+    		System.out.println(findNumbers(str) + " : " + findOperands(str));
+    		ans = parenthesisFinder(findNumbers(str), findOperands(str));
     		System.out.println(ans);
     	}
     }
@@ -84,7 +84,7 @@ public class Project {
     	 return withParenthesis;
     }
     
-    public List<String> findOpperands(String str){
+    public List<String> findOperands(String str){
     	String[] operands = {"!","-","+","*","/","%","^"};
     	String [] strArray = str.split("\\(?\\d+\\.?\\d*\\)?");
     	List<String> returned = new ArrayList<String>();
@@ -155,34 +155,24 @@ public class Project {
     
     //DO MATH ON THE INDEXES OF THE LISTS THAT ARE PASSED
     
-    public Double math(List<Double> numbers, List<String> opperands){
+    public Double math(List<Double> numbers, List<String> operands){
     	Double temp = 0.0;
-    	String[][] orderOfOpps = {{"!"},{"^"},{"%"},{"*","/"},{"+","-"}};
-    	if (numbers.size() <= opperands.size()){
+    	String[] orderOfOpps = {"!","^","%","*/","+-"};
+    	if (numbers.size() <= operands.size()){
     		System.out.println("This isn't right");
     		return 0.0;
     	}
     	int inOrder = 0;
     	int k = 0;
-    	while (opperands.size() > 0){
-    		if (orderOfOpps[inOrder].length == 1){
-    			if (opperands.get(k) == orderOfOpps[inOrder][0]){
-    				temp = doMath(numbers.get(k),numbers.get(k+1),opperands.get(k));
-    				numbers.remove(k);
-    				numbers.remove(k);
-    				numbers.add(k,temp);
-    				opperands.remove(k);
-    			} else{k++;}
-    		} else {
-    			if (opperands.get(k) == orderOfOpps[inOrder][0] || opperands.get(k) == orderOfOpps[inOrder][1] ){
-    				temp = doMath(numbers.get(k),numbers.get(k+1),opperands.get(k));
-    				numbers.remove(k);
-    				numbers.remove(k);
-    				numbers.add(k,temp);
-    				opperands.remove(k);
-    			} else{k++;}
-    		}
-    		if (k == opperands.size()){
+    	while (operands.size() > 0){
+    		if (orderOfOpps[inOrder].contains(operands.get(k))){
+    			temp = doMath(numbers.get(k),numbers.get(k+1),operands.get(k));
+    			numbers.remove(k);
+    			numbers.remove(k);
+    			numbers.add(k,temp);
+    			operands.remove(k);
+    		} else{k++;}
+    		if (k == operands.size()){
     			k = 0;
     			inOrder++;
     		}
