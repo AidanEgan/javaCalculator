@@ -50,12 +50,13 @@ public class Project {
    	 		}
    	 	if (s.startsWith("-")){
    	 		Matcher match = Pattern.compile("-\\d+\\.?\\d*").matcher(s);
-   	 		if (match.find()) {tempStr.add("&"+match.group(0));}
+   	 		if (match.find()) {s = s.replaceFirst("-\\d+\\.?\\d*", "(0" + match.group(0) + ")");}
+   	 		
    	 	}
    	 	for (int y =0; y < tempStr.size(); y++){
-   	 		String replacer = tempStr.get(y).substring(1,tempStr.get(y).length());
-   	 		replacer = "(" + "0" + replacer.substring(0,replacer.length()) + ")";
-   	 		s = s.replace(tempStr.get(y).substring(1,tempStr.get(y).length()), replacer);
+   	 		String rep1 = tempStr.get(y).substring(1,tempStr.get(y).length());
+   	 		String rep2 = tempStr.get(y).substring(0,1);
+   	 		s = s.replace(tempStr.get(y), rep2 + "(" + "0" + rep1+ ")");
    	 	}
    	 	boolean replaced = false;
    	 	while (replaced == false){
